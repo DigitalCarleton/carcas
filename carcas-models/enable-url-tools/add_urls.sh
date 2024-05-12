@@ -26,7 +26,7 @@ do
     # echo $git_annex_output
 
     # Check if the output contains the string "web"
-    if [[ $git_annex_output != *"web"* ]]; then
+    if [[ $git_annex_output != *"-- web"* ]]; then
         # If not found, add the file name to the array
         models_missing_urls+=("$file")
     fi
@@ -71,7 +71,7 @@ do
     # echo $git_annex_output
 
     # Check if the output contains the string "web"
-    if [[ $git_annex_output != *"web"* ]]; then
+    if [[ $git_annex_output != *"-- web"* ]]; then
         # If not found, add the file name to the array
         posters_missing_urls+=("$file")
     fi
