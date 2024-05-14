@@ -47,7 +47,9 @@ async function processFolders(folderPath) {
     const files = fs.readdirSync(modelFolderPath);
     const posters = new Set(fs.readdirSync(posterFolderPath));
 
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
     for (let file of files) {
         const baseName = file.toLowerCase().replace(/ /g, '-').replace(/\*$/, '');
         const charBaseName = baseName.split('');
