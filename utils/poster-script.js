@@ -1,43 +1,41 @@
 //IMPORTS
-const puppeteer = require('puppeteer')
-const fs = require("fs")
-const path = require("path")
+const puppeteer = require('puppeteer');
+const fs = require("fs");
+const path = require("path");
 
-let fetch
+process.setMaxListeners(20);
 
-const folderList = []
+function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
-async function generatePosterForModel(posterPath, fileName) {
+async function generatePosterForModel(browser, posterPath, modelName) {
 
-    const browser = await puppeteer.launch()
-    const page = await browser.newPage()
+    try {
+        const page = await browser.newPage();
+        const localHtmlPath = `https://3dviewer.sites.carleton.edu/carcas/html-files/${modelName}.html`;
+        console.log(localHtmlPath);
+        await page.goto(localHtmlPath, { timeout: 60000 });
 
-    file = fileName.split('.')[0];
-    let modelName = "";
-    for (let i = 0; i < file.length - 7; i++) {
-        modelName += file[i]
+        await page.waitForFunction(() => {
+            const modelViewer = document.querySelector('model-viewer');
+            return modelViewer && modelViewer.modelIsVisible;
+        }, { timeout: 60000 });
+
+        const modelViewerElement = await page.$('model-viewer');
+        if (modelViewerElement) {
+            sleep(500);
+            const imageBuffer = await modelViewerElement.screenshot({ type: 'webp' });
+            fs.writeFileSync(posterPath, imageBuffer);
+            console.info(`Poster saved to ${posterPath}`);
+        } else {
+            console.log('No model viewer element found');
+        }
+        await page.close();
+    } catch (error) {
+        console.error("Error occurred:", error);
     }
 
-    const localHtmlPath = "https://3dviewer.sites.carleton.edu/carcas/html-files/" + modelName + ".html";
-    console.log(localHtmlPath)
-    await page.goto(localHtmlPath)
-
-    await page.waitForFunction(() => {
-        const modelViewer = document.querySelector('model-viewer')
-        return modelViewer && modelViewer.modelIsVisible
-    })
-
-    const modelViewerElement = await page.$('model-viewer')
-    if (modelViewerElement) {
-        const imageBuffer = await modelViewerElement.screenshot({ type: 'webp' })
-
-        fs.writeFileSync(posterPath, imageBuffer)
-        console.info(`Poster saved to ${posterPath}`)
-    } else {
-        console.log('No model viewer element found')
-    }
-
-    await browser.close()
 }
 
 async function processFolders(folderPath) {
@@ -46,50 +44,29 @@ async function processFolders(folderPath) {
     const posterFolderPath = folderPath + '/carcas-models/posters';
     console.log(`Model path: ${modelFolderPath}, Poster path: ${posterFolderPath}`);
 
-    fs.readdir(modelFolderPath, function (err, files) {
-        if (err) {
-            console.error("Could not list the directory.", err);
-            process.exit(1);
+    const files = fs.readdirSync(modelFolderPath);
+    const posters = new Set(fs.readdirSync(posterFolderPath));
+
+    const browser = await puppeteer.launch();
+    for (let file of files) {
+        const baseName = file.toLowerCase().replace(/ /g, '-').replace(/\*$/, '');
+        const charBaseName = baseName.split('');
+        var finalBaseName = '';
+        for (let i = 0; i < charBaseName.length - 4; i++) {
+            finalBaseName += charBaseName[i];
         }
+        const posterFileName = `${finalBaseName}-poster.webp`;
+        if (!posters.has(posterFileName)) {
+            console.info(`No poster found for ${posterFileName}`);
+            await generatePosterForModel(browser, path.join(posterFolderPath, posterFileName), finalBaseName);
+        }
+    }
+    await browser.close();
 
-        files.forEach((file, index) => {
-            // Make one pass and make the file complete
-            let posterFileName = file.toLowerCase();
-            posterFileName = posterFileName.replaceAll(' ', '-');
-            posterFileName = posterFileName.split('.')[0];
-            posterFileName = posterFileName + '-poster.webp';
-            let found = false;
-
-            fs.readdir(posterFolderPath, (err, files) => {
-                if (err) {
-                    console.error("Could not list the directory.", err);
-                    process.exit(1);
-                }
-                files.forEach((file, index) => {
-                    if (file === posterFileName) {
-
-                        found = true;
-                    }
-                })
-                if (found === false) {
-                    console.info(`No poster found for ${posterFileName}`);
-                    generatePosterForModel(posterFolderPath, posterFileName);
-                }
-            })
-
-        });
-    });
-
-}
-
-async function haveNoPoster(folderPath) {
-    const results = fs.readdirSync(folderPath);
-    const webpFiles = results.filter(file => file.endsWith('.webp'))
-    return webpFiles.length === 0;
 }
 
 (async () => {
-    const folderPath = path.resolve(__dirname, "")
-    const fileBefore = folderPath.substring(0, folderPath.lastIndexOf('/'))
+    const folderPath = path.resolve(__dirname, "");
+    const fileBefore = folderPath.substring(0, folderPath.lastIndexOf('/'));
     await processFolders(fileBefore);
 })()
