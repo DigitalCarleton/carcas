@@ -1,0 +1,4 @@
+# ignore everything that Puppeteer installed, used for creating posters
+node_modules/
+package-lock.json
+package.json
