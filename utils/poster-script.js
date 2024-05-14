@@ -48,9 +48,8 @@ async function processFolders(folderPath) {
     const posters = new Set(fs.readdirSync(posterFolderPath));
 
     const browser = await puppeteer.launch({
-        args: [
-            { headless: false }
-        ]
+        headless: false,
+        args: ["--no-sandbox"]
     });
     for (let file of files) {
         const baseName = file.toLowerCase().replace(/ /g, '-').replace(/\*$/, '');
