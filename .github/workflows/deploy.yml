@@ -16,15 +16,18 @@ jobs:
       - name: Get the next version number
         id: get-version-number
         run: |
+          echo "At step get-version-number"
           # Call the get_version_number.sh script
           bash ./.github/scripts/get_version_number.sh >> "$GITHUB_ENV"
 
       - name: Create new tag
         run: |
+          echo "At step Create new tag"
           new_version_num=$next_version
 
           git config --global user.name "${{ github.triggering_actor  }}"
           git config --global user.email "dha@carleton.edu"
+          echo "Configured git"
 
           git fetch
           git checkout main
@@ -32,8 +35,9 @@ jobs:
           git tag -a v$new_version_num -m "Release $new_version_num"
           git push origin v$new_version_num
 
-      - name: merge branches
+      - name: Merge branches
         run: |
+          echo "At step Merge branches"
           git fetch
           git checkout server
           git merge main
@@ -47,6 +51,7 @@ jobs:
           key: ${{ secrets.KEY }}
           port: ${{ secrets.PORT }}
           script: |
+            echo "At step Deploy to Server"
             cd ~/public_html/carcas
             git checkout server
             git pull origin server
