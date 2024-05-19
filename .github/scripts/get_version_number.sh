@@ -14,8 +14,4 @@ current_version_number=${latest_tag#"v"}
 # Generate new version number
 next_version_number=$((current_version_number + 1))
 
-echo "Latest version: $current_version_number"
-echo "::set-output name=current-version::$current_version_number"
-
-echo "Next version: $next_version_number"
-echo "::set-output name=next-version::$next_version_number"
+echo "next_version=$next_version_number"

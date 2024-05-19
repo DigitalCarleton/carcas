@@ -13,15 +13,15 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Get the current version number
+      - name: Get the next version number
         id: get-version-number
         run: |
           # Call the get_version_number.sh script
-          bash ./.github/scripts/get_version_number.sh
+          bash ./.github/scripts/get_version_number.sh >> "$GITHUB_ENV"
 
       - name: Create new tag
         run: |
-          new_version_num=${{ steps.get-version-number.outputs.next-version }}
+          new_version_num=$next_version
 
           git config --global user.name "${{ github.triggering_actor  }}"
           git config --global user.email "dha@carleton.edu"
