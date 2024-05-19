@@ -49,7 +49,6 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.KEY }}
-          port: ${{ secrets.PORT }}
           script: |
             echo "At step Deploy to Server"
             cd ~/public_html/carcas
