@@ -48,7 +48,7 @@ async function processFolders(folderPath) {
     const posters = new Set(fs.readdirSync(posterFolderPath));
 
     const browser = await puppeteer.launch({
-        executablePath: '../node_modules/chromium'
+        executablePath: '../node_modules/chromium/lib/chromium/chrome-linux/chrome'
     });
 
     for (let file of files) {
