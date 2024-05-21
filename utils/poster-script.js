@@ -48,6 +48,8 @@ async function processFolders(folderPath) {
     const files = fs.readdirSync(modelFolderPath);
     const posters = new Set(fs.readdirSync(posterFolderPath));
 
+    console.log(chromium.path);
+
     const browser = await puppeteer.launch({
         executablePath: chromium.path
     });
