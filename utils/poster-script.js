@@ -2,6 +2,7 @@
 const puppeteer = require('puppeteer');
 const fs = require("fs");
 const path = require("path");
+const chromium = require('chromium');
 
 process.setMaxListeners(20);
 
