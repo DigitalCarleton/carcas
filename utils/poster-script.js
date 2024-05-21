@@ -2,6 +2,7 @@
 const puppeteer = require('puppeteer');
 const fs = require("fs");
 const path = require("path");
+const chromium = require('chromium');
 
 process.setMaxListeners(20);
 
@@ -48,8 +49,7 @@ async function processFolders(folderPath) {
     const posters = new Set(fs.readdirSync(posterFolderPath));
 
     const browser = await puppeteer.launch({
-        args: ['--no-sandbox', '--disable-setuid-sandbox'],
-        executablePath: '../node_modules/chromium/lib/chromium/chrome-linux/chrome'
+        executablePath: chromium.path
     });
 
     for (let file of files) {
