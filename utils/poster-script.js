@@ -2,7 +2,6 @@
 const puppeteer = require('puppeteer');
 const fs = require("fs");
 const path = require("path");
-const chromium = require('chromium');
 
 process.setMaxListeners(20);
 
@@ -47,8 +46,6 @@ async function processFolders(folderPath) {
 
     const files = fs.readdirSync(modelFolderPath);
     const posters = new Set(fs.readdirSync(posterFolderPath));
-
-    console.log(chromium.path);
 
     const browser = await puppeteer.launch({
         executablePath: chromium.path
