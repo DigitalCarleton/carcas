@@ -53,4 +53,4 @@ jobs:
             echo "At step Deploy to Server"
             cd ~/public_html/carcas
             git checkout server
-            git pull origin server
+            git pull github server
