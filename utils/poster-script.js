@@ -2,7 +2,7 @@
 const puppeteer = require('puppeteer');
 const fs = require("fs");
 const path = require("path");
-const chromium = require('chromium');
+// const chromium = require('chromium');
 
 process.setMaxListeners(20);
 
@@ -48,9 +48,7 @@ async function processFolders(folderPath) {
     const files = fs.readdirSync(modelFolderPath);
     const posters = new Set(fs.readdirSync(posterFolderPath));
 
-    const browser = await puppeteer.launch({
-        executablePath: chromium.path
-    });
+    const browser = await puppeteer.launch();
 
     for (let file of files) {
         const baseName = file.toLowerCase().replace(/ /g, '-').replace(/\*$/, '');
