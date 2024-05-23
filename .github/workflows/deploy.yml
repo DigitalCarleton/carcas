@@ -44,13 +44,13 @@ jobs:
           git push origin server
 
       - name: Deploy to server
-        uses: appleboy/ssh-action@v1.0.0
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.KEY }}
+          password: ${{ secrets.PASSWORD }}
           script: |
             echo "At step Deploy to Server"
             cd ~/public_html/carcas
             git checkout server
-            git pull origin server
+            git pull github server
