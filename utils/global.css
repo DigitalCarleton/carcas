@@ -132,7 +132,8 @@ model-viewer > #ar-prompt > img {
 @media (min-width: 768px) {
   #controlContainer {
     top: 8px;
-    left: 0;
+    text-align: left;
+    left: 8px;
   }
 }
 
