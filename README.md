@@ -11,6 +11,10 @@ Previous maintainers:
 - Erin Watson '24 watson.e.and@gmail.com
 - Noah Zameer Lee '27 leen2@carleton.edu
 
+Previous Digital Humanities Associates who worked on different versions of the codebase:
+- Henry Burkhardth '26 burkhardth@carleton.edu
+- Xingyi Zhang '24 zhangx3@carleton.edu
+
 This is a work in process.
 
 ## How to use
